@@ -1,6 +1,9 @@
 <?php
 namespace Core;
 
+use Core\DB;
+//use PDO;
+
 class Model implements DbModelInterface
 {
 
@@ -27,7 +30,7 @@ class Model implements DbModelInterface
     {
         $db = new DB();
         $sql = "show columns from  $this->table_name;";
-        $results = $db->query($sql);
+        $results = $db->query($sql);    
         foreach($results as $result) {
             array_push($this->columns, $result['Field']);
         }
@@ -72,7 +75,7 @@ class Model implements DbModelInterface
     {
         $db = new DB();
         $this->sql .= ";";
-        $this->collection = $db->query($this->sql, $this->params);
+        $this->collection = $db->query($this->sql, $this->params);   
         return $this;
     }
     
@@ -146,18 +149,19 @@ class Model implements DbModelInterface
     public function addItem()
     {
        if ( filter_input(INPUT_POST, 'ad') !== null) {
-
+           
            $db = new DB();
            $this->sql = "SELECT MAX(id) AS MaxProductId FROM $this->table_name;";
            $lastID = $db->query($this->sql);
            $newID = $lastID[0]['MaxProductId'] ;
            $newID++;
            $db = new DB();
+           $price = str_replace ( ',' , '.' , $_POST['newPrice'] );
            $postValues = "'".(string)($_POST['newSKU'])."','".(string)($_POST['newName'])."',"
-                   .(string)($_POST['newPrice']).",".(string)($_POST['newQTY']).",'".(string)($_POST['newDsc'])."'"; 
+                   .$price.",".(string)($_POST['newQTY']).",'".(string)($_POST['newDsc'])."'"; 
 
            $this->sql = "INSERT INTO $this->table_name VALUES ($newID, $postValues);";
-           $db->query($this->sql);
+           $db->query($this->sql);          
            echo "<script type='text/javascript'>alert('Інформація про новий товар додана!');</script>";   
       } 
    }
@@ -168,7 +172,7 @@ class Model implements DbModelInterface
             
            $db = new DB();
            $this->sql = "DELETE FROM $this->table_name WHERE id=$id";
-           $db->query($this->sql);
+           $db->query($this->sql);       
            echo "<script type='text/javascript'>alert('Інформація про товар видалена!');</script>";   
         } 
     }
@@ -184,7 +188,7 @@ class Model implements DbModelInterface
             $dsc = filter_input(INPUT_POST, 'editDsc');
             $db = new DB();
             $this->sql = "UPDATE $this->table_name SET sku = '$sku', name = '$name', price = $price, qty = $qty, description = '$dsc' WHERE id=$id;";
-            $db->query($this->sql);
+        
             echo "<script type='text/javascript'>alert('Інформацію про даний товар успішно змінено !');</script>";         
        } 
   }
