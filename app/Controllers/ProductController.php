@@ -13,10 +13,11 @@ class ProductController extends Controller
 
     public function listAction()
     {
+        setcookie('addActionResult', 0, 0);
         $this->set('title', "Товари");
         $products = $this->getModel('Product')
             ->initCollection()
-            ->sort($this->getSortParams())
+            ->sortProducts($this->getSortParams())
             ->getCollection()
             ->select();
         $this->set('products', $products);
@@ -46,8 +47,11 @@ class ProductController extends Controller
             $values = $model->getPostValues();
             $this->set('product', $values);
             $this->set('saved', 1); 
+            $model->checkPostValues(filter_input(INPUT_POST, 'editSKU'), filter_input(INPUT_POST, 'editName'),
+                filter_input(INPUT_POST, 'editPrice'), filter_input(INPUT_POST, 'editQTY'), filter_input(INPUT_POST, 'editDsc'));
             $model->saveEditItem($id, $values); 
         }
+
         $this->set('product', $model->getItem($this->getId())); 
         $this->renderLayout();
     }
@@ -56,8 +60,13 @@ class ProductController extends Controller
     {
         $this->set('title', "Додавання товару");
         $model = $this->getModel('Product');
-        $model->addItem(); 
-        $this->renderLayout(); 
+        $model->checkPostValues(filter_input(INPUT_POST, 'newSKU'), filter_input(INPUT_POST, 'newName'),
+                filter_input(INPUT_POST, 'newPrice'), filter_input(INPUT_POST, 'newQTY'), filter_input(INPUT_POST, 'newDsc'));
+        
+        if ( $model->addItem() === 1 ) {
+            Controller::redirect('/product/edit');
+        }
+     $this->renderLayout(); 
      }
 
     public function deleteAction() 
@@ -70,16 +79,21 @@ class ProductController extends Controller
               $values = $model->getPostValues();
               $this->set('product', $values);            
          }
-         
-        $model->deleteItem($id);
-        $this->renderLayout();
+
+        if ( $model->deleteItem($id) === 1 ) {
+                Controller::redirect('/product/list');  
+        }
+          
+    $this->renderLayout();
     }
    
     public function getSortParams()
     {
-        $params = filter_input(INPUT_POST, 'sort');
-       
-    return $params;
+        $selected[0] = filter_input(INPUT_POST, 'sort');
+        $selected[1] = filter_input(INPUT_POST, 'prcFrom');
+        $selected[2] = filter_input(INPUT_POST, 'prcTo');
+
+    return $selected;
     } 
 
     public function getId()

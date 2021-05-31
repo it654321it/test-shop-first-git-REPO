@@ -1,4 +1,9 @@
 <?php
+     if( $_COOKIE['addActionResult'] == 1) {
+        echo "<script type='text/javascript'>alert('Дані про новий товар додано! "
+         . "Нижче можна переглянути внесені дані і додатково, при потребі, відредагувати та заново зберегти!');</script>"; 
+        setcookie('addActionResult', 0, 0);
+      }
 $products =  $this->get('product');
 $_POST['editSKU'] = $_POST['editName'] = $_POST['editPrice'] = $_POST['editQTY'] = $_POST['editDsc'] = $_POST['editButtonPressed'] = null;
 ?>

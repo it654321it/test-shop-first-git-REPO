@@ -66,5 +66,25 @@ class Controller
      {
          App::run($route);
      }
+     
+     public static function redirect($path)
+     { 
+       if( filter_input(INPUT_POST, 'del') !== null ) { 
+
+           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+           $url = $server_host . route::getBP() . $path;
+           header("Location: $url");
+       }
+
+          if( filter_input(INPUT_POST, 'ad') !== null ) {
+
+           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+           $url = $server_host . route::getBP() . $path;
+           $db = new DB();
+           $num = $db->query("SELECT MAX(id) AS MaxProductId FROM products;");
+           $url .= '?id=' . $num[0]['MaxProductId'];
+           header("Location: $url"); 
+       } 
+  } 
     
 }
