@@ -24,7 +24,7 @@ class Model implements DbModelInterface
     {
         $columns = implode(',',$this->getColumns());
         $this->sql = "select $columns from " . $this->table_name ;
-        return $this;
+    return $this;
     }
 
     public function getColumns()
@@ -35,7 +35,7 @@ class Model implements DbModelInterface
         foreach($results as $result) {
             array_push($this->columns, $result['Field']);
         }
-        return $this->columns;
+    return $this->columns;
     }
     
     public function sort($params)
@@ -60,7 +60,8 @@ class Model implements DbModelInterface
     {       
        if ($params[0] =='pASC' || $params[0] =='pDESC' || $params[0] =='qASC' || $params[0] =='qDESC') {
            $goodSelection = 1;
-       } else {
+       } 
+       else {
            $goodSelection = 0;
        }
        
@@ -71,7 +72,7 @@ class Model implements DbModelInterface
        else if (is_string($params[1])) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
            echo "<script type='text/javascript'>window.alert('Мінімальна ціна має бути числом, а не текстом (повторіть спробу). "
-           . "Буде застосовано сортування  за замовчуванням до всього діапазону товарів!');</script>";
+           . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
            return $this;
        } else {
            $goodMinPrice = 0;
@@ -84,7 +85,7 @@ class Model implements DbModelInterface
        else if (is_string($params[2])) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
            echo "<script type='text/javascript'>window.alert('Максимальна ціна має бути числом, а не текстом (повторіть спробу). "
-           . "Буде застосовано сортування  за замовчуванням до всього діапазону товарів!');</script>";
+           . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
            return $this;
        } else {
            $goodMaxPrice = 0;
@@ -93,7 +94,7 @@ class Model implements DbModelInterface
        if ( $goodMinPrice === 1 && $goodMaxPrice === 0) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
            echo "<script type='text/javascript'>window.alert('Мінімальну ціну не задано або задано не коректно (повторіть спробу). "
-           . "Буде застосовано сортування  за замовчуванням до всього діапазону товарів!');</script>";
+           . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
        
        return $this;
        }
@@ -101,7 +102,7 @@ class Model implements DbModelInterface
        if ( $goodMinPrice === 0 && $goodMaxPrice === 1) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
            echo "<script type='text/javascript'>window.alert('Максимальну ціну не задано або задано не коректно (повторіть спробу). "
-           . "Буде застосовано сортування  за замовчуванням до всього діапазону товарів!');</script>";
+           . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
        
        return $this;
        }
@@ -110,7 +111,7 @@ class Model implements DbModelInterface
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
            echo "<script type='text/javascript'>window.alert('Ціна зліва є більшою за ціну зправа (не коректно)."
            . " Необхідно ввести коректний діапазон цін (ціна зліва має бути меншою за ціну зправа)! "
-                   . "Буде застосовано сортування  за замовчуванням до всього діапазону товарів!');</script>";
+                   . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
        
        return $this;
        }
@@ -223,21 +224,42 @@ class Model implements DbModelInterface
        
     return $this;
     }
+    
+    public function filterUser($params)
+    {         
+            $db = new DB();                
+            $this->sql = "SELECT email, password FROM $this->table_name;";
+            $arr = $db->query($this->sql);
+            $email = $password = null;
+                
+            for ($i=0; $i<count($arr); $i++) {
+                if ( $arr[$i]['email'] == $params['email'] )  {
+                    $email = $i;
+                } 
+
+                if ( $arr[$i]['password'] == $params['password'] )  {
+                    $password = $i;
+                }
+           } 
+                
+             if ( $email !== null &&  $password !== null && $email === $password ) {
+                   $email++;
+                   $columns = implode(',',$this->getColumns());
+                   $this->sql = "select $columns from  $this->table_name WHERE customer_id=$email";
+             } 
+             else {
+                   echo "<script type='text/javascript'>alert('Користувача з таким паролем і ел.адресою - не існує ! Спробуйте ще раз ! ');</script>";
+             }
+
+    return $this;
+    }
 
     public function getCollection()
-    {
+    {        
         $db = new DB();
         $this->sql .= ";";
         $this->collection = $db->query($this->sql, $this->params);   
-    return $this;
-    }
     
-    public function getCollectionAll()
-    {
-        $db = new DB();
-        $this->sql = "SELECT * FROM  $this->table_name WHERE $this->id_column=$this->params;"; 
-        $this->collection = $db->query($this->sql); 
-
     return $this;
     }
 
@@ -249,15 +271,6 @@ class Model implements DbModelInterface
     public function selectFirst()
     {
         return isset($this->collection[0]) ? $this->collection[0] : null;
-    }
-
-    public function getItem($id)
-    {
-        $sql = "SELECT * FROM $this->table_name WHERE $this->id_column=?;";
-        $db = new DB();
-        $params = array($id);
-    
-    return $db->query($sql, $params)[0];
     }
 
     public function getPostValues()
@@ -296,7 +309,15 @@ class Model implements DbModelInterface
 
     public function getId()
     {
-        return 1;
+        if (isset($_GET['customer_id'])) {
+         
+        return $_GET['customer_id'];
+        } 
+        else {
+            return NULL;
+        }
+        
+    return filter_input(INPUT_GET, 'customer_id');
     }
     
     public function checkPostValues($sku, $name, $price, $qty, $dsc)

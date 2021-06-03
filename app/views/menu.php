@@ -10,8 +10,20 @@
     <?php endforeach; ?>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="<?php echo $this->getBP();?>/customer/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        <li><a href="<?php echo $this->getBP();?>/customer/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <?php 
+        if( !empty($_SESSION['data']) ) { 
+        echo '<li><a href="' . $this->getBP();
+        ?>/customer/info/"><span class="glyphicon glyphicon-user"></span>
+         <?php echo $_SESSION['data'];?></a></li>
+        <li><a href="<?php echo $this->getBP();?>/logout/logout/"><span class="glyphicon glyphicon-log-out"></span>  Log out</a></li>
+        <?php  
+        } else { 
+        ?>
+        <li><a href="<?php echo $this->getBP();?>/signup/signup/"><span></span>  Sign up </a></li>
+        <li><a href="<?php echo $this->getBP();?>/login/login/"><span class="glyphicon glyphicon-log-in"></span>  Log in</a></li>
+        <?php
+        }
+        ?>
     </ul>
   </div>
 </nav>

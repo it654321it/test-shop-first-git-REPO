@@ -10,16 +10,15 @@
 <input type="submit" value="Submit">
 </form>
 
-<div class="product"><p>
+<div class="product" align="center">
+    <h3><b>
         <?= \Core\Url::getLink('/customer/add', 'Додати інфо про нового клієнта'); ?>
-</p></div>
+    </b></h3>
+</div>
 <?php
-
 $customers =  $this->get('customer');
-
 foreach($customers as $customer)  :
 ?>
-
     <div class="product">
         <h4>Прізвище: <?php echo $customer['last_name']?></h4>
         <h4>Ел. адреса: <?php echo $customer['email']?><h4>
@@ -29,6 +28,8 @@ foreach($customers as $customer)  :
         <p>
             <?= \Core\Url::getLink('/customer/edit', 'Редагувати інфо про клієнта', array('customer_id'=>$customer['customer_id'])); ?>
         </p>
+        <p>
+            <?= \Core\Url::getLink('/customer/info', 'Подивитись інфо про клієнта', array('customer_id'=>$customer['customer_id'])); ?>
+        </p>
     </div>
 <?php endforeach; ?>
-

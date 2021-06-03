@@ -32,4 +32,3 @@ $_POST['editSKU'] = $_POST['editName'] = $_POST['editPrice'] = $_POST['editQTY']
     <input type="submit" value="Редагувати" name="edit">
 </form>
 <div class="product"><p><b><?= \Core\Url::getLink('/product/list', 'Вернутись назад до списку усіх товарів'); ?></b></p></div>
-    

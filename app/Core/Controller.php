@@ -76,7 +76,7 @@ class Controller
            header("Location: $url");
        }
 
-          if( filter_input(INPUT_POST, 'ad') !== null ) {
+       if( filter_input(INPUT_POST, 'ad') !== null ) {
 
            $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
            $url = $server_host . route::getBP() . $path;
@@ -85,6 +85,20 @@ class Controller
            $url .= '?id=' . $num[0]['MaxProductId'];
            header("Location: $url"); 
        } 
-  } 
+       
+       if( $path== '/product/list' ) {
+
+           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+           $url = $server_host . route::getBP() . $path;           
+           header("Location: $url");
+       }
+       
+       if( filter_input(INPUT_POST, 'logincheck') !== null ) {
+
+           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+           $url = $server_host . route::getBP() . $path;
+           header("Location: $url");
+       }
+     } 
     
 }
