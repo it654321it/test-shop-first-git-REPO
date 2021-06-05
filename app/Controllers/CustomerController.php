@@ -10,7 +10,8 @@ class CustomerController extends Controller
 {
     public function infoAction() // оригінальна назва методу (в задачі) -  getCustomer()  
     {    
-        if (!empty($_SESSION['id'])) {
+        if (!empty($_SESSION['id'])) {  
+           
            $this->set('title', "Карточка користувача"); 
            $сustomer = $this->getModel('Customer')  
            ->filter()       
@@ -33,14 +34,12 @@ class CustomerController extends Controller
     public function listAction()
     {
         $this->set('title', "Клієнти");
-
         $сustomer = $this->getModel('Customer')
             ->initCollection()
             ->sort($this->getSortParams())
             ->getCollection()
             ->select();
         $this->set('customer', $сustomer);
-
         $this->renderLayout();
     }
 

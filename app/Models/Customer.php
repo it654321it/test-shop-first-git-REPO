@@ -21,5 +21,41 @@ class Customer extends Model
 
     return $this;
     }
+    
+     public function checkFirstname($a)
+    {
+    //...     
+    return $this;
+    }
+    
+     public function checkLastname($a)
+    {
+    //...       
+    return $this;
+    }
+    
+     public function checkTel($a)
+    {
+    //...       
+    return $this;
+    }
+    
+     public function checkEmail($a)
+    {
+    //...       
+    return $this;
+    }
+    
+    public function checkCity($a)
+    {
+    //...  
+    return $this;
+    }
+    
+    public function checkPass($a, $b)
+    { 
+    //...  
+    return $this;
+    }
           
 }

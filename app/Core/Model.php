@@ -313,8 +313,17 @@ class Model implements DbModelInterface
          
         return $_GET['customer_id'];
         } 
+        else if (isset($_POST['customer_id'])) {
+            
+        return $_POST['customer_id'];
+        } 
+        else if (($_SESSION['id'])) {
+            
+        return $_SESSION['id'];
+        }
         else {
-            return NULL;
+        
+        return NULL; 
         }
         
     return filter_input(INPUT_GET, 'customer_id');

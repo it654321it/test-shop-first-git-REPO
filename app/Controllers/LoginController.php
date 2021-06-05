@@ -8,6 +8,7 @@ use Core\Helper;
 
 class LoginController extends Controller
 {
+    
     public function loginAction()
     {
         $this->set('title', "Вхід в систему"); 
@@ -27,11 +28,40 @@ class LoginController extends Controller
             ->selectFirst(); 
               
             if( count($customer) > 7   &&  !empty($customer['customer_id']) ) {
-                 
+                
                 $_SESSION['id'] = $customer['customer_id'];
                 $_SESSION['admin_role'] = $customer['admin_role'];               
                 $_SESSION['data'] = $customer['first_name']. ' '. $customer['last_name'];
+                
+                if ( !file_exists( App::getViewDir().DS. 'menuLOGIN.php' ) ) {
+
+                    copy(App::getViewDir() . DS. 'menu-login-copy.php', App::getViewDir() . DS. 'menuLOGIN.php');
+                    clearstatcache();
+                 }
+          
+                if ( file_exists( App::getViewDir().DS. 'menu.php' ) ) {
+ 
+                    unlink(App::getViewDir().DS. 'menu.php' );
+                    clearstatcache();
+                    
+                    copy( App::getViewDir().DS. 'menu-logout-copy.php' , App::getViewDir().DS. 'menu.php' );
+                    clearstatcache();
+
+                    if ( ! file_exists( App::getViewDir().DS. 'menuLOGOUT.php' ) ) {
+
+                          copy( App::getViewDir().DS. 'menu-logout-copy.php' , App::getViewDir().DS. 'menuLOGOUT.php' );
+                          clearstatcache();
+                      } else {
+
+                            rename(App::getViewDir() . DS. 'menuLOGOUT.php', App::getViewDir() . DS. 'menu.php');
+                            clearstatcache(); 
+                      }
                 Controller::redirect('/index/hellowuser');
+                } 
+                else {
+                     copy( App::getViewDir().DS. 'menu-login-copy.php' , App::getViewDir().DS. 'menu.php' );
+                     clearstatcache();
+                }               
             } 
             else {
                 $this->invalid_password = 1;
@@ -40,5 +70,5 @@ class LoginController extends Controller
     
     $this->renderLayout();
     }
-
+    
 }

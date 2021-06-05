@@ -9,5 +9,5 @@
         <b>Введіть пароль до Вашого облікового запису:</b> 
         <input type="password" placeholder="some pass" name="password" size="31">
     </div>
-    <input type="submit" value="Увійти" name="logincheck"> <!<!-- onClick="alert('Ваші дані перевіряються!') -->
+    <input type="submit" value="Увійти" name="logincheck"> <!
 </form>
