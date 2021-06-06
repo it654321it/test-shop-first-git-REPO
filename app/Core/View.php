@@ -54,7 +54,6 @@ class View
             $path = $this->getDefaultPath();
         }
 
-        // render partial view data.
         array_walk($this->data, static function(&$item, $key) {
             if ($item instanceof View) {
                 $item = $item->render();

@@ -1,10 +1,7 @@
 <?php
 namespace Controllers;
 
-use Core\App;
 use Core\Controller;
-use Core\View;
-use Core\Helper; 
 
 class LoginController extends Controller
 {

@@ -50,9 +50,6 @@ class Controller
         return $model;
     }
 
-     /**
-     * @return mixed
-     */
      private function getMenuCollection()
      {
         return $this->getModel('menu')
@@ -69,14 +66,7 @@ class Controller
      
      public static function redirect($path)
      { 
-       if( filter_input(INPUT_POST, 'del') !== null ) { 
-
-           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-           $url = $server_host . route::getBP() . $path;
-           header("Location: $url");
-       }
-
-       if( filter_input(INPUT_POST, 'ad') !== null ) {
+       if( $path == '/product/edit' ) {
 
            $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
            $url = $server_host . route::getBP() . $path;
@@ -86,17 +76,24 @@ class Controller
            header("Location: $url"); 
        } 
        
-       if( $path== '/product/list' ) {
+       if( $path == '/product/list' ) {
 
            $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
            $url = $server_host . route::getBP() . $path;           
            header("Location: $url");
        }
        
-       if( filter_input(INPUT_POST, 'logincheck') !== null ) {
+       if( $path == '/index/hellowuser' ) {
 
            $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
            $url = $server_host . route::getBP() . $path;
+           header("Location: $url");
+       }
+       
+       if( $path == '/customer/welcome' ) {
+
+           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+           $url = $server_host . route::getBP() . $path;           
            header("Location: $url");
        }
      } 

@@ -1,6 +1,5 @@
 <?php
 namespace Controllers;
-//namespace Models;
 
 use Core\Controller;
 use Core\View;
