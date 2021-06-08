@@ -14,8 +14,7 @@
         if( !empty($_SESSION['data']) ) { 
         echo '<li><a href="' . $this->getBP();
         ?>/customer/info?customer_id=
-        <?php echo $_SESSION['id'];
-        ?>
+        <?php echo $_SESSION['id'];?>
         "><span class="glyphicon glyphicon-ok"></span>
          <?php echo $_SESSION['data'];?></a></li>
         <li><a href="<?php echo $this->getBP();?>/logout/logout/"><span class="glyphicon glyphicon-log-out"></span>  Log out</a></li>

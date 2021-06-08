@@ -1,4 +1,4 @@
-<?php
+<?php 
 $maxPrice = 0;
 foreach ($products as $product) {
     if ( $maxPrice < $product['price']) {

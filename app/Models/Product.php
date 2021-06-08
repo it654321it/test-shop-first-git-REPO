@@ -88,7 +88,7 @@ class Product extends Model
     }
     
     public function sortProducts($params)
-    {       
+    {         
        if ($params[0] =='pASC' || $params[0] =='pDESC' || $params[0] =='qASC' || $params[0] =='qDESC') {
            $goodSelection = 1;
        } 
