@@ -89,7 +89,17 @@ class Product extends Model
     
     public function sortProducts($params)
     {         
-       if ($params[0] =='pASC' || $params[0] =='pDESC' || $params[0] =='qASC' || $params[0] =='qDESC') {
+       if (@$_COOKIE['sort'] !== null && filter_input(INPUT_POST, 'sort') === null) {
+                $params[0] = $_COOKIE['sort'];
+       }
+            
+       if (@$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null 
+               && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') === null) {
+                $params[1] = @$_COOKIE['prcFrom'];
+                $params[2] = @$_COOKIE['prcTo'];
+       }
+            
+        if ($params[0] =='pASC' || $params[0] =='pDESC' || $params[0] =='qASC' || $params[0] =='qDESC') {
            $goodSelection = 1;
        } 
        else {

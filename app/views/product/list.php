@@ -1,4 +1,5 @@
-<?php 
+<?php
+use Core\Controller;
 $maxPrice = 0;
 foreach ($products as $product) {
     if ( $maxPrice < $product['price']) {
@@ -6,6 +7,15 @@ foreach ($products as $product) {
     }
 }
 setcookie('maxPrice', $maxPrice, 0);
+
+if (filter_input(INPUT_POST, 'sort') !== null) {
+        setcookie('sort', filter_input(INPUT_POST, 'sort'), 0);
+} 
+
+if ( filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') !== null) {
+        setcookie('prcFrom', filter_input(INPUT_POST, 'prcFrom'), 0);
+        setcookie('prcTo', filter_input(INPUT_POST, 'prcTo'), 0);
+} 
 ?>
 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
 <select name='sort'>
