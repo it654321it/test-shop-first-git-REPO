@@ -3,6 +3,7 @@ namespace Controllers;
 
 use Core\Controller;
 use Core\View;
+use Core\Helper;
 
 class ProductController extends Controller
 {
@@ -41,31 +42,46 @@ class ProductController extends Controller
         $model = $this->getModel('Product');
         $this->set('saved', 0);
         $this->set("title", "Редагування товару"); 
-        $id = filter_input(INPUT_GET, 'id');
 
-        if ($id) {
-            $values = $model->getPostValues();
-            $this->set('product', $values);
-            $this->set('saved', 1); 
-            $model->checkPostValues(filter_input(INPUT_POST, 'editSKU'), filter_input(INPUT_POST, 'editName'),
-                filter_input(INPUT_POST, 'editPrice'), filter_input(INPUT_POST, 'editQTY'), filter_input(INPUT_POST, 'editDsc'));
-            $model->saveEditItem($id, $values); 
+        if (Helper::isAdmin(@$_SESSION['admin_role']) == 1) {
+            $id = filter_input(INPUT_GET, 'id');
+            
+            if ($id) {
+
+                $values = $model->getPostValues();
+                $this->set('product', $values);
+                $this->set('saved', 1); 
+                $model->checkPostValues(filter_input(INPUT_POST, 'editSKU'), filter_input(INPUT_POST, 'editName'),
+                    filter_input(INPUT_POST, 'editPrice'), filter_input(INPUT_POST, 'editQTY'), filter_input(INPUT_POST, 'editDsc'));
+                $model->saveEditItem($id, $values); 
+            }
+            
+            $this->set('product', $model->getItem($this->getId())); 
+        } 
+        else { 
+            Controller::redirect('/product/edit2'); 
         }
-
-        $this->set('product', $model->getItem($this->getId())); 
-        $this->renderLayout();
+        
+    $this->renderLayout();
     }
 
     public function addAction() 
     {
         $this->set('title', "Додавання товару");
         $model = $this->getModel('Product');
-        $model->checkPostValues(filter_input(INPUT_POST, 'newSKU'), filter_input(INPUT_POST, 'newName'),
-                filter_input(INPUT_POST, 'newPrice'), filter_input(INPUT_POST, 'newQTY'), filter_input(INPUT_POST, 'newDsc'));
         
-        if ( $model->addItem() === 1 ) {
-            Controller::redirect('/product/edit');
+        if (Helper::isAdmin(@$_SESSION['admin_role']) == 1) {
+            $model->checkPostValues(filter_input(INPUT_POST, 'newSKU'), filter_input(INPUT_POST, 'newName'),
+                    filter_input(INPUT_POST, 'newPrice'), filter_input(INPUT_POST, 'newQTY'), filter_input(INPUT_POST, 'newDsc'));
+
+            if ( $model->addItem() == 1 ) {
+                Controller::redirect('/product/edit');
+            }
         }
+        else { 
+            Controller::redirect('/product/add2'); 
+        }
+        
      $this->renderLayout(); 
      }
 
@@ -73,17 +89,23 @@ class ProductController extends Controller
     {
         $this->set('title', "Видалення товару");
         $model = $this->getModel('Product');
-        $id = filter_input(INPUT_GET, 'id');
+        
+        if (Helper::isAdmin($_SESSION['admin_role']) == 1) {
+            $id = filter_input(INPUT_GET, 'id');
 
-         if ($id) {
-              $values = $model->getPostValues();
-              $this->set('product', $values);            
-         }
+             if ($id) {
+                  $values = $model->getPostValues();
+                  $this->set('product', $values);            
+             }
 
-        if ( $model->deleteItem($id) === 1 ) {
-                Controller::redirect('/product/list');  
-        }
-          
+            if ( $model->deleteItem($id) == 1 ) {
+                    Controller::redirect('/product/list');  
+            }
+        } 
+        else { 
+            Controller::redirect('/product/delete2');
+        }       
+    
     $this->renderLayout();
     }
    

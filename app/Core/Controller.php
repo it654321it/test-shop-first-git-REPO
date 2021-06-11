@@ -66,36 +66,19 @@ class Controller
      
      public static function redirect($path)
      { 
+       $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+         
        if( $path == '/product/edit' ) {
 
-           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-           $url = $server_host . route::getBP() . $path;
            $db = new DB();
            $num = $db->query("SELECT MAX(id) AS MaxProductId FROM products;");
-           $url .= '?id=' . $num[0]['MaxProductId'];
-           header("Location: $url"); 
+           $url = $server_host . route::getBP() . $path . '?id=' . $num[0]['MaxProductId'];
        } 
-       
-       if( $path == '/product/list' ) {
-
-           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+       else {
            $url = $server_host . route::getBP() . $path;           
-           header("Location: $url");
        }
        
-       if( $path == '/index/hellowuser' ) {
-
-           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-           $url = $server_host . route::getBP() . $path;
-           header("Location: $url");
-       }
-       
-       if( $path == '/customer/welcome' ) {
-
-           $server_host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
-           $url = $server_host . route::getBP() . $path;           
-           header("Location: $url");
-       }
+     header("Location: $url");
      } 
     
 }
