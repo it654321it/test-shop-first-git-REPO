@@ -124,7 +124,7 @@ class Product extends Model
        
        if ( $goodMinPrice === 1 && $goodMaxPrice === 0) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
-           echo "<script type='text/javascript'>window.alert('Мінімальну ціну не задано або задано не коректно (повторіть спробу). "
+           echo "<script type='text/javascript'>window.alert('Максимальну ціну не задано або задано не коректно (повторіть спробу). "
            . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
        
        return $this;
@@ -132,7 +132,7 @@ class Product extends Model
        
        if ( $goodMinPrice === 0 && $goodMaxPrice === 1) {
            $this->sql = "SELECT * FROM $this->table_name WHERE price ORDER BY price ASC";
-           echo "<script type='text/javascript'>window.alert('Максимальну ціну не задано або задано не коректно (повторіть спробу). "
+           echo "<script type='text/javascript'>window.alert('Мінімальну ціну не задано або задано не коректно (повторіть спробу). "
            . "Буде застосовано сортування за замовчуванням до всього діапазону товарів!');</script>";
        
        return $this;

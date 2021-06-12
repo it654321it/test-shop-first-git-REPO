@@ -1,6 +1,8 @@
 <?php
 use Core\Controller;
+
 $maxPrice = 0;
+
 foreach ($products as $product) {
     if ( $maxPrice < $product['price']) {
         $maxPrice = $product['price'];
@@ -16,18 +18,124 @@ if ( filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'p
         setcookie('prcFrom', filter_input(INPUT_POST, 'prcFrom'), 0);
         setcookie('prcTo', filter_input(INPUT_POST, 'prcTo'), 0);
 } 
+             
+    function getSelection ($choise = '') 
+    {
+        switch ($choise) {
+            case 'pDESC':
+                $selected2 = 'selected';
+                break;
+
+            case 'qASC':
+                $selected3 = 'selected';
+                break;
+
+            case 'qDESC':
+                $selected4 = 'selected';
+                break;
+            
+            case 'pASC':
+            default:
+                $selected1 = 'selected';
+                break;
+            }
+            
+    return @array($selected1, $selected2, $selected3, $selected4);
+    }
+
+    if (@$_COOKIE['sort'] === null && filter_input(INPUT_POST, 'sort') === null) {
+        list ($selected1, $selected2, $selected3, $selected4) = getSelection();
+    }
+    else if (@$_COOKIE['sort'] !== null && filter_input(INPUT_POST, 'sort') === null) {
+                list ($selected1, $selected2, $selected3, $selected4) = getSelection($_COOKIE['sort']);
+            } 
+            else if (@$_COOKIE['sort'] === null && filter_input(INPUT_POST, 'sort') !== null ||
+                            @$_COOKIE['sort'] !== null && filter_input(INPUT_POST, 'sort') !== null) {   
+                        list ($selected1, $selected2, $selected3, $selected4) = getSelection(filter_input(INPUT_POST, 'sort'));
+                    }
+
+if (@$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') === null
+        ||
+        @$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') !== null
+        ||
+        @$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') === null
+        ||
+        @$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] !== null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') === null
+        ||
+        @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') === null
+        ||
+        @$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] !== null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') !== null
+        ||
+        @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') !== null
+        ||
+        @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] === null 
+        && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') === null) {
+    
+$selectedPriceMin = 0;
+$selectedPriceMax = $maxPrice;
+}
+else if (@$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null 
+               && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') === null
+            ||
+            @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null  
+               && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') === null
+            ||
+            @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null  
+               && filter_input(INPUT_POST, 'prcFrom') === null && filter_input(INPUT_POST, 'prcTo') !== null) {
+    
+       $selectedPriceMin = $_COOKIE['prcFrom'];
+       $selectedPriceMax = $_COOKIE['prcTo'];
+       } 
+       else if (@$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] === null  
+                      && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') !== null) {
+           
+              $selectedPriceMin = filter_input(INPUT_POST, 'prcFrom');
+              $selectedPriceMax = filter_input(INPUT_POST, 'prcTo');
+              }
+              else if (@$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null  
+                             && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') !== null
+                          ||
+                           @$_COOKIE['prcFrom'] === null && @$_COOKIE['prcTo'] !== null  
+                             && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') !== null
+                          ||
+                           @$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] === null  
+                             && filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'prcTo') !== null) {    
+                  
+                      $selectedPriceMin = filter_input(INPUT_POST, 'prcFrom');
+                      $selectedPriceMax = filter_input(INPUT_POST, 'prcTo');
+                      }
 ?>
 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
 <select name='sort'>
-   <option <?php echo filter_input(INPUT_POST, 'sort') === 'pASC' ? 'selected' : '';?> value="pASC">від дешевших до дорожчих</option>
-   <option <?php echo filter_input(INPUT_POST, 'sort') === 'pDESC' ? 'selected' : '';?> value="pDESC">від дорожчих до дешевших</option>
-   <option <?php echo filter_input(INPUT_POST, 'sort') === 'qASC' ? 'selected' : '';?>  value="qASC">за зростанням кількості</option>
-   <option <?php echo filter_input(INPUT_POST, 'sort') === 'qDESC' ? 'selected' : '';?>  value="qDESC">за спаданням кількості</option>
+   <option <?php echo $selected1; ?> value="pASC">від дешевших до дорожчих</option>
+   <option <?php echo $selected2; ?> value="pDESC">від дорожчих до дешевших</option>
+   <option <?php echo $selected3; ?> value="qASC">за зростанням кількості</option>
+   <option <?php echo $selected4; ?> value="qDESC">за спаданням кількості</option>
 </select>
     <p></p>
     <p>
-    Ціна від: <input type="text" name="prcFrom" size="14" placeholder="0">
-    Ціна до: <input type="text" name="prcTo" size="14" placeholder="<?php echo $maxPrice ?>">
+    Ціна від: <input type="text" name="prcFrom" size="14" placeholder="<?php  
+    if ($selectedPriceMin) {
+          echo $selectedPriceMin;
+    }
+    else {
+         echo '0';
+    } 
+        ?>">
+    Ціна до: <input type="text" name="prcTo" size="14" placeholder="<?php     
+    if ($selectedPriceMax) {
+          echo $selectedPriceMax;
+    }
+    else {
+          echo $maxPrice;
+    }?>">
     </p>
 <input type="submit" value="Submit">
 </form>
@@ -36,7 +144,7 @@ if ( filter_input(INPUT_POST, 'prcFrom') !== null && filter_input(INPUT_POST, 'p
 </div>
 <?php
 $products =  $this->get('products');
-foreach($products as $product)  :
+foreach($products as $product):
 ?>
     <div class="product">
         <p class="sku">Код: <?php echo htmlspecialchars_decode($product['sku'])?></p>

@@ -39,13 +39,26 @@ class Customer extends Model
                 }
            } 
                 
-             if ( $email !== null &&  $password !== null && $email === $password ) {
+             if ( $email !== null && $password !== null && $email === $password ) {
                    $email++;
                    $columns = implode(',',$this->getColumns());
                    $this->sql = "select $columns from  $this->table_name WHERE customer_id=$email";
              } 
              else {
-                   echo "<script type='text/javascript'>alert('Користувача з таким паролем і ел.адресою - не існує ! Спробуйте ще раз ! ');</script>";
+                     if ( $email === null && $params['email'] || $email === null && $params['email'] === null ) {
+                        echo "<script type='text/javascript'>alert('Некоректне значення електронної адреси!"
+                         . " Спробуйте ще раз ! ');</script>";
+                    } 
+                    else if ($password === null && $params['password'] || $password === null && $params['password'] === null ) {
+                        echo "<script type='text/javascript'>alert('Некоректне значення пароля! Спробуйте ще раз ! ');</script>";
+                    }
+                    else if ($email !== $password && $email === null 
+                                 || $email !== $password && $password === null
+                                 || $email === null && $password === null
+                                 || $email !== $password) {
+                        echo "<script type='text/javascript'>alert('Користувача з таким паролем і такою ел.адресою - не існує ! "
+                        . "Спробуйте ще раз ! ');</script>";
+                    }
              }
 
     return $this;
