@@ -18,7 +18,7 @@ $customer =  $this->get('customer');
         <b>Місто: <?php echo $customer['city']?></b> 
     </div>
     <div class="product">
-        <b>Правo адміністрування сайту (додавати, редагувати та видаляти інфо про товар): <?php if ($customer['admin_role'] == 1) {echo 'Так';} else {echo 'Ні';}?></b>
+        <b>Правo адміністрування сайту (додавати, редагувати, видаляти інфо про товар та експорутвати в xml): <?php if ($customer['admin_role'] == 1) {echo 'Так';} else {echo 'Ні';}?></b>
     </div>
     <div class="product">
           <?= \Core\Url::getLink('/customer/list', '  Вернутись до списку всіх клієнтів'); ?>    

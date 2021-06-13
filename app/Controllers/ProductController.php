@@ -3,7 +3,10 @@ namespace Controllers;
 
 use Core\Controller;
 use Core\View;
+use Core\Route;
 use Core\Helper;
+use SimpleXMLElement;
+use DOMDocument;
 
 class ProductController extends Controller
 {
@@ -129,5 +132,52 @@ class ProductController extends Controller
 
     return filter_input(INPUT_GET, 'id');
     }  
+    
+    public function xmlAction()
+    {       
+            if (Helper::isAdmin($_SESSION['admin_role']) == 1) {
+
+               $products = $this->getModel('Product')
+                                           ->initCollection()
+                                           ->getCollection()->select();
+
+               $this->set('products', $products);          
+               $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?><products/>');
+
+                foreach ($products as $product) {
+                    $xmlProduct = $xml->addChild('product');
+                    $xmlProduct->addChild('id', $product['id']);
+                    $xmlProduct->addChild('sku', $product['sku']);
+                    $xmlProduct->addChild('name', $product['name']);
+                    $xmlProduct->addChild('price', $product['price']);
+                    $xmlProduct->addChild('qty', $product['qty']);
+                    $xmlProduct->addChild('description', $product['description']);
+                }
+
+                $dom = new DOMDocument("1.0");
+                $dom->preserveWhiteSpace = false;
+                $dom->formatOutput = true;
+                $dom->loadXML($xml->asXML());
+                $filename = './../phpmvc2/app/views/product/products.xml';
+                $file = fopen($filename,'w');
+                fwrite($file, $dom->saveXML());
+                fclose($file);
+                
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($filename));
+                readfile($filename);
+                exit;
+            } 
+            else { 
+                Controller::redirect('/product/xml2');
+            } 
+  
+    $this->renderLayout();
+    }
     
 }

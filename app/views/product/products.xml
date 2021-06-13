@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product>
+    <id>3</id>
+    <sku>t00003</sku>
+    <name>Телефон 3</name>
+    <price>24.00</price>
+    <qty>5.000</qty>
+    <description>&lt;h1&gt;Телефон 3&lt;/h1&gt;</description>
+  </product>
+  <product>
+    <id>4</id>
+    <sku>t00004</sku>
+    <name> &lt;h1&gt;Телефон 4&lt;/h1&gt; </name>
+    <price>8.00</price>
+    <qty>2.000</qty>
+    <description> &lt;h1&gt;Телефон 4&lt;/h1&gt; </description>
+  </product>
+  <product>
+    <id>18</id>
+    <sku>t02</sku>
+    <name>Yiw</name>
+    <price>16.23</price>
+    <qty>13.000</qty>
+    <description>goooood</description>
+  </product>
+</products>
