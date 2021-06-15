@@ -74,9 +74,12 @@ class Signup extends Model
             } 
             else {
                   $db = new DB();
-                  $this->sql = "SELECT * FROM $this->table_name WHERE email='$email';";
-
-                  if ( count ($db->query($this->sql)) !== 0 ) { 
+                  $this->sql = "SELECT * FROM $this->table_name WHERE email=?;";                 
+                  $query = $db->getConnection();
+                  $protectedQuery = $query->prepare($this->sql);
+                  $protectedQuery->execute(array($email));
+                  
+                  if ( count ($protectedQuery->fetchAll()) !== 0 ) { 
                       echo "<script type='text/javascript'>alert('Дана електронна адреса вже використовується. Введіть інакшу !');</script>"; 
                       $this->checkRate = false;
                   return;
@@ -91,7 +94,7 @@ class Signup extends Model
             }
 
             if ( empty($pass_1) || empty($pass_2) ) {
-                echo "<script type='text/javascript'>alert('Один або обидва введені паролі порожні. Повторіть спробу !');</script>"; 
+                echo "<script type='text/javascript'>alert('Один або обидва паролі порожні. Повторіть спробу !');</script>"; 
                 $this->checkRate = false;
                 return;
             }
@@ -131,9 +134,10 @@ class Signup extends Model
             $hemail = htmlspecialchars((filter_input(INPUT_POST, 'emailCustomer')));
             $hcity = htmlspecialchars((filter_input(INPUT_POST, 'city')));
             $hpass = md5( htmlspecialchars ((filter_input ( INPUT_POST, 'pass_1'))));
-            $postValues = "'".$hlname."','".$hfname."','".$htel."','".$hemail."','".$hcity."','".$hpass."',0" ; 
-            $this->sql = "INSERT INTO $this->table_name VALUES ($nextId, $postValues);"; 
-            $db->query($this->sql);
+            $this->sql = "INSERT INTO $this->table_name VALUES (?,?,?,?,?,?,?,?);"; 
+            $query = $db->getConnection();
+            $protectedQuery = $query->prepare($this->sql);
+            $protectedQuery->execute(array($nextId, $hlname, $hfname, $htel, $hemail, $hcity, $hpass, 0));
 
         return 1;
         }  

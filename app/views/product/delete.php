@@ -1,5 +1,5 @@
 <div class="product">
-    <h3><b>Інформація про товар, який Ви хочете видалити:</b></h3>
+    <h3 align="center"><b>Інформація про товар, який Ви хочете видалити:</b></h3>
 </div>
 <?php
 $products =  $this->get('product');

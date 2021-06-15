@@ -3,7 +3,6 @@ namespace Controllers;
 
 use Core\Controller;
 use Core\View;
-use Core\Route;
 use Core\Helper;
 use SimpleXMLElement;
 use DOMDocument;

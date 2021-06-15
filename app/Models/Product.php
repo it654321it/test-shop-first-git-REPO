@@ -3,6 +3,7 @@ namespace Models;
 
 use Core\Model;
 use Core\DB;
+use PDO;
 
 class Product extends Model
 {
@@ -41,14 +42,15 @@ class Product extends Model
            $newID = $lastID[0]['MaxProductId'] ;
            $newID++;
            $db = new DB();
-           $sku = htmlspecialchars((filter_input(INPUT_POST, 'newSKU')));
-           $name = htmlspecialchars((filter_input(INPUT_POST, 'newName')));
-           $description = htmlspecialchars($_POST['newDsc'], ENT_QUOTES);
-           
-           $postValues = "'".$sku."','".$name."',".(string)$_POST['newPrice'].",".(string)($_POST['newQTY']).",'".$description."'"; 
-
-           $this->sql = "INSERT INTO $this->table_name VALUES ($newID, $postValues);";
-           $db->query($this->sql);  
+           $sku = htmlspecialchars(filter_input(INPUT_POST, 'newSKU'), ENT_QUOTES);
+           $name = htmlspecialchars(filter_input(INPUT_POST, 'newName'), ENT_QUOTES);
+           $price = htmlspecialchars(filter_input(INPUT_POST, 'newPrice'), ENT_QUOTES);
+           $qty = htmlspecialchars(filter_input(INPUT_POST, 'newQTY'), ENT_QUOTES);
+           $description = htmlspecialchars(filter_input(INPUT_POST,'newDsc'), ENT_QUOTES);
+           $this->sql = "INSERT INTO $this->table_name VALUES (?,?,?,?,?,?);";
+           $query = $db->getConnection();
+           $protectedQuery = $query->prepare($this->sql);
+           $protectedQuery->execute(array($newID, $sku, $name, $price, $qty, $description));
            
        return 1;
        } 
@@ -61,8 +63,10 @@ class Product extends Model
         if( filter_input(INPUT_POST, 'del') !== null ) {    
             
            $db = new DB();
-           $this->sql = "DELETE FROM $this->table_name WHERE id=$id";
-           $db->query($this->sql);       
+           $this->sql = "DELETE FROM $this->table_name WHERE id=?"; 
+           $query = $db->getConnection();
+           $protectedQuery = $query->prepare($this->sql);
+           $protectedQuery->execute(array($id));
            echo "<script type='text/javascript'>alert('Інформація про товар видалена!');</script>";   
          
         return 1;
@@ -81,8 +85,11 @@ class Product extends Model
             $qty = filter_input(INPUT_POST, 'editQTY');
             $dsc = htmlspecialchars(filter_input(INPUT_POST, 'editDsc'));
             $db = new DB();
-            $this->sql = "UPDATE $this->table_name SET sku = '$sku', name = '$name', price = $price, qty = $qty, description = '$dsc' WHERE id=$id;";
-            $db->query($this->sql);
+            $this->sql = "UPDATE $this->table_name SET sku = ?, name = ?, price = ?, qty = ?, description = ? WHERE id=?;";
+            $query = $db->getConnection();
+            $protectedQuery = $query->prepare($this->sql);
+            $protectedQuery->execute(array($sku, $name, $price, $qty, $dsc, $id));
+            //$db->query($this->sql);
             echo "<script type='text/javascript'>alert('Інформацію про даний товар успішно змінено !');</script>"; 
        }   
     }
@@ -257,8 +264,11 @@ class Product extends Model
         
         for ($i=0; $i<count($columns); $i++) {
             $db = new DB();
-            $this->sql = "SELECT $columns[$i] FROM $this->table_name WHERE id=$id;";
-            $valuesTmp[$columns[$i]] = $db->query($this->sql);
+            $this->sql = "SELECT ? FROM $this->table_name WHERE id=?;";
+            $query = $db->getConnection();
+            $protectedQuery = $query->prepare($this->sql);
+            $protectedQuery->execute(array($columns[$i], $id));
+            $valuesTmp[$columns[$i]] = $protectedQuery->fetchAll();
         }
         
         foreach($valuesTmp as $lv_1) {
