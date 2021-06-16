@@ -55,10 +55,12 @@ class ProductController extends Controller
                 $this->set('saved', 1); 
                 $model->checkPostValues(filter_input(INPUT_POST, 'editSKU'), filter_input(INPUT_POST, 'editName'),
                     filter_input(INPUT_POST, 'editPrice'), filter_input(INPUT_POST, 'editQTY'), filter_input(INPUT_POST, 'editDsc'));
-                $model->saveEditItem($id, $values); 
+                
+                $model->saveEditItem($id);
+                 
             }
             
-            $this->set('product', $model->getItem($this->getId())); 
+        $this->set('product', $model->getItem($this->getId())); 
         } 
         else { 
             Controller::redirect('/product/edit2'); 

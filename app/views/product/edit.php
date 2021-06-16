@@ -10,15 +10,15 @@ $_POST['editSKU'] = $_POST['editName'] = $_POST['editPrice'] = $_POST['editQTY']
 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
 <p><h3  align="center"> Редагування товару </h3></p>
     <div class="product"><p>
-        <b>Новий артикул (не більше 30 символів букв та цифр (без будь-яких інших знаків)):</b> 
+        <b>Новий артикул  (перший символ-латинська літера, інші-цифри, і загалом-не більше 10 символів):</b> 
         <input type="text" name="editSKU" size="31" value="<?php echo $products['sku']?>">
     </div>
     <div class="product"><p>
-        <b>Нова назва (не більше 30 символів тексту (без цифр)):</b> 
+        <b>Нова назва (всі символи-тільки латинські літери і не більше 30 (з пробілами)):</b> 
         <input type="text" name="editName" size="31" value="<?php echo $products['name']?>"></p>
     </div>
     <div class="product"><p>
-        <b>Нова ціна (не більше 12 цифр цілої частини і до 2 цифр дрібної частини):</b> 
+        <b>Нова ціна (не більше 12 цифр цілої частини і до 2 цифр дрібної частини (розділовий знак-крапка))):</b> 
         <input type="text" name="editPrice" size="15" value="<?php echo $products['price']?>"></p>
     </div>
     <div class="product"><p>
@@ -26,7 +26,7 @@ $_POST['editSKU'] = $_POST['editName'] = $_POST['editPrice'] = $_POST['editQTY']
         <input type="text" name="editQTY" size="13" value="<?php echo (int)($products['qty'])?>"></p>
     </div>
     <div class="product"><p>
-        <b>Новий опис (не більше 50 символів тексту):</b> 
+        <b>Новий опис (тільки латинськими літерами і не більше 50 літер (з пробілами)):</b> 
         <input type="text" name="editDsc" size="51" value="<?php echo $products['description']?>"></p>
     </div>
     <input type="submit" value="Застосувати редагування" name="edit">

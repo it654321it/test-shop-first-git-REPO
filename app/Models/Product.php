@@ -75,7 +75,7 @@ class Product extends Model
     return 0;
     }
         
-    public function saveEditItem($id, $values)
+    public function saveEditItem($id)
     {
         if ( $this->checkRate == 1) {
 
@@ -89,9 +89,12 @@ class Product extends Model
             $query = $db->getConnection();
             $protectedQuery = $query->prepare($this->sql);
             $protectedQuery->execute(array($sku, $name, $price, $qty, $dsc, $id));
-            //$db->query($this->sql);
             echo "<script type='text/javascript'>alert('Інформацію про даний товар успішно змінено !');</script>"; 
-       }   
+       
+       return 1;
+       } 
+      
+    return 0; 
     }
     
     public function sortProducts($params)
@@ -288,57 +291,85 @@ class Product extends Model
         if ( filter_input(INPUT_POST, 'ad') !== null || filter_input(INPUT_POST, 'edit') !== null ) {
                 
             $sku = trim($sku);
-            $pattern = '/^[a-z]{1}[0-9]{1,30}$/i';
+            $patternSku = '/^[a-z]{1}[0-9]{1,10}$/i';
+           
+            $name = trim($name);
+            $patternName = '/^[a-z\s]{1,30}$/i';
+            
+            $price = trim($price);
+            $patternPrice = '/\d{1,12}\.{0,1}\d{0,2}$/';
+            
+            $qty = trim($qty);
+            $patternQty = '/^[0-9]{1,12}$/i'; 
+            
+            $dsc = trim($dsc);
+            $patternDsc = '/^[a-z\s]{1,50}$/i';
 
-            if ( empty($sku) || !preg_match($pattern, $sku) ) {
-               echo "<script type='text/javascript'>alert('Не правильно введено артикул (sku) товару. Повторіть спробу !');</script>"; 
+            if ( empty($sku) ) {
+               echo "<script type='text/javascript'>alert('Артикул не може бути порожнім. Повторіть спробу!');</script>"; 
                $_POST['newSKU'] =  null;
-               $this->checkRate = fault;
+               $this->checkRate = 0;
                return;
             } 
-            else {
-                $name = trim($name);
-                $pattern = '/^[a-z\s]{1,30}$/i';
-                
-                if ( empty($name) || !preg_match($pattern, $name) ) {
-                    echo "<script type='text/javascript'>alert('Не правильно введено назву товару. Повторіть спробу !');</script>"; 
-                    $_POST['newName'] = null;
-                    $this->checkRate = fault;
-                    return;
-                } 
-                else {
-                    $price = trim($price);
-                    $pattern = '/\d{1,12}\.{0,1}\d{0,2}$/';
-                    
-                    if ( empty($price) || !preg_match($pattern, $price) || !is_numeric($price) ) {
-                        echo "<script type='text/javascript'>alert('Не правильно введено ціну товару. Повторіть спробу !');</script>"; 
-                        $_POST['newPrice'] = null;
-                        $this->checkRate = fault;
-                        return;
-                    } 
-                    else {
-                        $qty = trim($qty);
-                        $pattern = '/^[0-9]{1,12}$/i'; 
-            
-                        if ( empty($qty) || !preg_match($pattern, $qty) || !is_numeric($qty) ) {
-                            echo "<script type='text/javascript'>alert('Не правильно введено кількість товару. Повторіть спробу !');</script>"; 
-                            $_POST['newQTY'] = null;
-                            $this->checkRate = fault;
-                            return;
-                        } 
-                        else {
-                            $dsc = trim($dsc);
-                            $pattern = '/^[a-z\s]{1,50}$/i';
-            
-                            if ( empty($dsc) ||  !preg_match($pattern, $dsc) ) {
-                                echo "<script type='text/javascript'>alert('Не правильно введено опис товару. Повторіть спробу !');</script>"; 
-                                $_POST['newDsc'] = null;
-                                $this->checkRate = fault;
-                                return;
-                            }
-                        }
-                    }
-                }
+            else if ( !preg_match($patternSku, $sku) ) {
+                echo "<script type='text/javascript'>alert('Не вірний артикул. Першим символом артикулу має бути будь-яка "
+                  . "латинська літера, всі інші-цифри (не менше 1 цифри), і загалом-в назві має бути не більше 10 символів. Повторіть спробу! "
+                   . ");</script>"; 
+                $_POST['newSKU'] = null;
+                $this->checkRate = 0;
+                return;
+            }    
+            else if ( empty($name) ) {
+                echo "<script type='text/javascript'>alert('Назва не може бути порожньою. Повторіть спробу !');</script>"; 
+                $_POST['newName'] = null;
+                $this->checkRate = 0;
+                return;
+            }            
+            else if ( !preg_match($patternName, $name) ) {
+                echo "<script type='text/javascript'>alert('Не вірна назва. Всі символи мають бути латинськими літерами "
+                    . "(до 30 літер в назві, без цифр, можуть бути пробіли). Повторіть спробу !');</script>"; 
+                $_POST['newName'] = null;
+                $this->checkRate = 0;
+                return;
+            }            
+            else if ( empty($price) ) {
+                echo "<script type='text/javascript'>alert('Ціна не може бути порожньою. Повторіть спробу !');</script>"; 
+                $_POST['newPrice'] = null;
+                $this->checkRate = 0;
+                return;
+            } 
+            else if ( !preg_match($patternPrice, $price) || !is_numeric($price) ) {
+                echo "<script type='text/javascript'>alert('Не вірна ціна. В ціні мають бути присутні тільки цифри "
+                    . "(до 14 цифр: максимум 12 цифр до крапки і макисмум 2 цифри після крапки). Повторіть спробу !');</script>"; 
+                $_POST['newPrice'] = null;
+                $this->checkRate = 0;
+                return;
+            }                        
+            else if ( empty($qty) ) {
+                echo "<script type='text/javascript'>alert('Кількість не може бути порожньою. Повторіть спробу !');</script>"; 
+                $_POST['newQTY'] = null;
+                $this->checkRate = 0;
+                return;
+            }
+            else if ( !preg_match($patternQty, $qty) || !is_numeric($qty) ) {
+                echo "<script type='text/javascript'>alert('Не вірна кількість товару. Кількість має складатись тільки з цифр "
+                . "(максимум 12 цифр). Повторіть спробу !');</script>"; 
+                $_POST['newQTY'] = null;
+                $this->checkRate = 0;
+                return;
+            }
+            else if ( empty($dsc) ) {
+                echo "<script type='text/javascript'>alert('Опис не може бути порожнім. Повторіть спробу !');</script>"; 
+                $_POST['newDsc'] = null;
+                $this->checkRate = 0;
+                return;
+            }
+            else if ( !preg_match($patternDsc, $dsc) ) {
+                echo "<script type='text/javascript'>alert('Не вірний опис. Опис може містити тільки латинські літери та пробіли (до 50 літер)."
+                . " Повторіть спробу !');</script>"; 
+                $_POST['newDsc'] = null;
+                $this->checkRate = 0;
+                return;
             }
         
         $this->checkRate = 1;
