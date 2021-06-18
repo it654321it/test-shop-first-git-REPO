@@ -159,11 +159,10 @@ class ProductController extends Controller
                 $dom->preserveWhiteSpace = false;
                 $dom->formatOutput = true;
                 $dom->loadXML($xml->asXML());
-                $filename = './../phpmvc2/app/views/product/products.xml';
-                $file = fopen($filename,'w');
+                $filename = './app/views/product/products.xml';                
+                $file = fopen($filename,'w');           
                 fwrite($file, $dom->saveXML());
-                fclose($file);
-                
+                fclose($file);   
                 header('Content-Description: File Transfer');
                 header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="'.basename($filename).'"');
