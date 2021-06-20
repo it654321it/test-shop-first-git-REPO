@@ -7,7 +7,7 @@ use PDO;
 
 class Product extends Model
 {
-
+    
     function __construct()
     {
         $this->table_name = "products";
@@ -375,5 +375,45 @@ class Product extends Model
         $this->checkRate = 1;
         }
     }
-    
+   
+   public static function cart($qty, $price, $name, $sku)
+   {  
+       if( session_status( ) == 2 ) {    
+
+           if ( filter_input(INPUT_POST, 'addOrder') !== null ) {
+               
+                if ( !empty($qty)) {
+                    @$_SESSION['sumOrderedQty'] += $qty;
+                    $_SESSION[(string)('orderedQty'.$_SESSION['OrderedRate'])][] = $qty;             
+                       
+                    if ( !empty($price)) {
+                            @$_SESSION['sumOrderedPrice'] += $qty*$price;
+                            $_SESSION[(string)('orderedPrice'.$_SESSION['OrderedRate'])][] = $price;
+                    }
+
+                    if ( !empty($name)) {
+                            @$_SESSION[(string)('orderedName'.$_SESSION['OrderedRate'])][] = $name;
+                    }
+
+                    if ( !empty($sku)) {
+                            @$_SESSION[(string)('orderedSku'.$_SESSION['OrderedRate'])][] = $sku;
+                    }
+                }
+                
+           return;
+           }
+       } 
+   }
+   
+   public function deleteOrder()
+   {  
+       for ($i=1; $i<=@$_SESSION['OrderedRate']; $i++) {   
+            unset($_SESSION[(string)('orderedSku'.$i)], $_SESSION[(string)('orderedName'.$i)], $_SESSION[(string)('orderedPrice'.$i)], 
+                    $_SESSION[(string)('orderedQty'.$i)]);
+       }
+       unset($_SESSION['OrderedRate'], $_SESSION['sumOrderedQty'], $_SESSION['sumOrderedPrice']);
+   
+   return;
+   }
+
 }

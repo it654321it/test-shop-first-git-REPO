@@ -24,7 +24,8 @@ class ProductController extends Controller
             ->getCollection()
             ->select();
         $this->set('products', $products);
-        $this->renderLayout();
+        
+    $this->renderLayout();
     }
 
    public function viewAction() 
@@ -110,6 +111,15 @@ class ProductController extends Controller
             Controller::redirect('/product/delete2');
         }       
     
+    $this->renderLayout();
+    }
+    
+    public function deleteOrderAction()
+    {
+        $model = $this->getModel('Product');          
+        $model->deleteOrder();             
+        Controller::redirect('/product/order'); 
+        
     $this->renderLayout();
     }
    

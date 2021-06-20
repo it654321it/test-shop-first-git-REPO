@@ -7,7 +7,7 @@ use Models\Customer;
 
 class CustomerController extends Controller
 {
-    public function infoAction() // оригінальна назва методу (в задачі) -  getCustomer()  
+    public function infoAction()
     {    
         if (!empty($_SESSION['id'])) {
            $this->set('title', "Карточка користувача"); 

@@ -4,8 +4,7 @@ namespace Core;
 use Core\DB;
 
 class Model implements DbModelInterface
-{
-
+{    
     protected $table_name;
 
     protected $id_column;

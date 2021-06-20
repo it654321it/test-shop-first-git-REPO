@@ -9,12 +9,9 @@
 </select>
 <input type="submit" value="Submit">
 </form>
-
-<div class="product" align="center">
-    <h3><b>
-        <?= \Core\Url::getLink('/customer/add', 'Додати інфо про нового клієнта'); ?>
+    <h3 align="center"><b>
+        <?= \Core\Url::getLink('/customer/add', 'Додати нового клієнта'); ?>
     </b></h3>
-</div>
 <?php
 $customers =  $this->get('customer');
 foreach($customers as $customer)  :

@@ -137,27 +137,47 @@ else if (@$_COOKIE['prcFrom'] !== null && @$_COOKIE['prcTo'] !== null
           echo $maxPrice;
     }?>">
     </p>
-<input type="submit" value="Submit">
+<input type="submit" value="Застосувати">
 </form>
-<div class="product" align="center">
-    <h3><b><?= \Core\Url::getLink('/product/add', 'Додати товар'); ?></b></h3>
-</div>
+<h3 align="center"><b><?= \Core\Url::getLink('/product/add', 'Додати новий товар'); ?></b></h3>
 <?php
+if (filter_input(INPUT_POST, 'addOrder') !== null) { 
+    @$_SESSION['OrderedRate']++;
+}
 $products =  $this->get('products');
 foreach($products as $product):
 ?>
     <div class="product">
-        <p class="sku">Код: <?php echo htmlspecialchars_decode($product['sku'])?></p>
-        <h4><?php echo htmlspecialchars_decode($product['name'])?><h4>
-        <p> Ціна: <span class="price"><?php echo $product['price']?></span> грн</p>
-        <p> Кількість: <?php echo $product['qty']?></p>
-        <p> Опис: <?php echo htmlspecialchars_decode($product['description'])?></p>
+        <form name="second" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
+        <input type="text" name="<?php echo $product['sku']?>" size="3" value="<?php 
+        echo filter_input(INPUT_POST, $product['sku']) !== null ? filter_input(INPUT_POST, $product['sku']) : ''?>">
+        <b> шт.</b>
+        <input type="submit" name="addOrder" value="Додати в корзину">
+        </form>
+ <?php 
+if( session_status( ) == 2 ) {     
+    if (filter_input(INPUT_POST, 'addOrder') !== null) { 
+        \Models\Product::cart(filter_input(INPUT_POST, $product['sku']), $product['price'], 
+                htmlspecialchars_decode($product['name']), htmlspecialchars_decode($product['sku']));
+    } 
+}
+?>
+        <p class="sku">Код: <?php echo htmlspecialchars_decode($product['sku'])?>
+        </p>
+        <p>Назва: <?php echo htmlspecialchars_decode($product['name'])?>
+        </p>
+        <p> Ціна: <span class="price"><?php echo $product['price']?></span> грн
+        </p>
+        <p> Кількість: <?php echo (int)($product['qty'])?> шт.
+        </p>
+        <p> Опис: <?php echo htmlspecialchars_decode($product['description'])?>
+        </p>
         <p><?php if(!$product['qty'] > 0) { echo 'Нема в наявності'; } ?></p>
         <p>
-            <?= \Core\Url::getLink('/product/edit', 'Редагувати', array('id'=>$product['id'])); ?>
+            <h4><b><?= \Core\Url::getLink('/product/edit', 'Редагувати', array('id'=>$product['id'])); ?></b></h4>
         </p>
         <p>
-            <?= \Core\Url::getLink('/product/delete', 'Видалити інфо про даний товар', array('id'=>$product['id'])); ?>
+            <h4 align="right" colour="red"><b><?= \Core\Url::getLink('/product/delete', 'Видалити', array('id'=>$product['id'])); ?></b></h4>
         </p>
     </div>
 <?php endforeach; ?>

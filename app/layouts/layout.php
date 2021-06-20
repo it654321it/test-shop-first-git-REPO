@@ -1,3 +1,6 @@
+<?php
+use Models\Product;
+ ?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -8,6 +11,13 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>    </head>
     <body>
+                    
+            <div class="smalcart">
+                <strong>Товарів в корзині: </strong><?php echo !empty(@$_SESSION['sumOrderedQty']) ? $_SESSION['sumOrderedQty'] : '0'?> шт.
+                 <br/><strong>На суму: </strong><?php echo !empty(@$_SESSION['sumOrderedPrice']) ? $_SESSION['sumOrderedPrice'] : '0'?> грн.   
+                <br/><b><?= \Core\Url::getLink('/product/order', 'Оформити замовлення'); ?></b>
+            </div>
+            
         <div class="jumbotron">
             <div class="container text-center">
                 <h1>Test Shop</h1>
