@@ -9,7 +9,7 @@ for ($i=1; $i<=@$_SESSION['OrderedRate']; $i++):
     $sumPrc += @$_SESSION[(string)('orderedPrice'.$i)][0] * @$_SESSION[(string)('orderedQty'.$i)][0];
 ?>
 <p><b>№ позиції замовлення:</b> <?php echo $i?></p>
-<p><b>Акртикул:</b> <?php echo @$_SESSION[(string)('orderedSku'.$i)][0]?></p>
+<p><b>Артикул:</b> <?php echo @$_SESSION[(string)('orderedSku'.$i)][0]?></p>
 <p><b>Назва:</b> <?php echo@$_SESSION[(string)('orderedName'.$i)][0]?></p>
 <p><b>Ціна:</b> <?php echo@$_SESSION[(string)('orderedPrice'.$i)][0]?> грн</p>
 <p><b>Кількість:</b> <?php echo@$_SESSION[(string)('orderedQty'.$i)][0]?> шт.</p>
@@ -24,4 +24,5 @@ echo @$_SESSION[(string)('orderedPrice'.$i)][0] * @$_SESSION[(string)('orderedQt
 <h3 align="center"><b>Всього замовлено: </b></h3>
 <h4 align="center"><b>товарів:</b> <?php echo $sumQty?> шт., <b>на суму:</b> <?php echo $sumPrc?> грн. </h4>
 <h4><b><?= \Core\Url::getLink('/product/cardpay', 'Оплатити товар'); ?></b></h4>
+<h4 align="center"><b><?= \Core\Url::getLink('/product/email', 'Відправити замовлення на електронку'); ?></b></h4>
 <h4 align="right"><b><?= \Core\Url::getLink('/product/deleteOrder', 'Відмовитись від усього'); ?></b></h4>

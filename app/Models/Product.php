@@ -415,5 +415,58 @@ class Product extends Model
    
    return;
    }
+   
+   public function sendOrderByEmail()
+   {  
+
+    if( session_status( ) == 2 ) {   
+        $sumQty = $sumPrc = 0;
+        
+        $filename = './app/views/product/customerOrder.txt'; 
+        $file = fopen($filename,'w');           
+
+       if( @$_SESSION['OrderedRate'] !== null ) {  
+    
+           for ($i=1; $i<=$_SESSION['OrderedRate']; $i++) {    
+
+                $sumQty += @$_SESSION[(string)('orderedQty'.$i)][0];
+                $sumPrc += @$_SESSION[(string)('orderedPrice'.$i)][0] * @$_SESSION[(string)('orderedQty'.$i)][0];
+
+                $str = "№ позиції замовлення: $i \r\n" . 'Артикул: ' . @$_SESSION[(string)('orderedSku'.$i)][0] . "\r\n" 
+                        . 'Назва: ' . @$_SESSION[(string)('orderedName'.$i)][0] . "\r\n" . 'Ціна: ' . @$_SESSION[(string)('orderedPrice'.$i)][0]  . ' грн.' . "\r\n"
+                        . 'Кількість: ' . @$_SESSION[(string)('orderedQty'.$i)][0]  .' шт.' . "\r\n" . 'До сплати по даному артикулу: '
+                        . @$_SESSION[(string)('orderedPrice'.$i)][0] * @$_SESSION[(string)('orderedQty'.$i)][0] . 'грн.' ."\r\n" 
+                        . '*********************************************************************************************************************'
+                        . '******************************************************************************' . "\r\n";
+                fwrite($file, $str);
+           }           
+        }
+  
+        $str = 'Всього замовлено:'. "\r\n" . "товарів: $sumQty шт., на суму: $sumPrc грн.";
+        fwrite($file, $str);
+        fclose($file); 
+
+        if (file_exists($filename)) { 
+            $file = fopen($filename,'r'); 
+
+            if (@$_SESSION['sendEmailNameOrder'] !== null && filter_var(@$_SESSION['sendEmailNameOrder'], FILTER_VALIDATE_EMAIL) !== null) { 
+                $to = htmlspecialchars(@$_SESSION['sendEmailNameOrder']);
+            }
+
+            if (@$_SESSION['sendEmailThemeOrder'] !== null) { 
+                $subject = htmlspecialchars(@$_SESSION['sendEmailThemeOrder']);
+            }
+
+            if (fread($file)) { 
+                $message = fread($file);
+                mail($to, $subject, $message);
+            }
+        
+        }
+    
+     }
+     
+   return;
+   }
 
 }

@@ -122,6 +122,15 @@ class ProductController extends Controller
         
     $this->renderLayout();
     }
+    
+    public function emailAction()
+    {
+        $model = $this->getModel('Product');          
+        $model->sendOrderByEmail();             
+        Controller::redirect('/product/emailOK'); 
+        
+    $this->renderLayout();
+    }
    
     public function getSortParams()
     {
